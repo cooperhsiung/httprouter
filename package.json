@@ -1,5 +1,5 @@
 {
-  "name": "httprouter",
+  "name": "httprouter-js",
   "version": "1.0.0",
   "description": "Super fast web router for node.js",
   "main": "router.js",

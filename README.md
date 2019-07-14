@@ -8,21 +8,21 @@ Super fast web router for node.js, rewritten from golang's [httprouter](https://
 ## Installation
 
 ```bash
-npm i httprouter -S
+npm i httprouter-js -S
 ```
 
 ## Example
 
 ```typescript
 import { createServer, IncomingMessage, ServerResponse } from "http";
-import { Router } from "httprouter";
+import { Router } from "httprouter-js";
 
 const router = new Router();
 
 function Index(res: ServerResponse, req: IncomingMessage, params: any) {
   res.write(
-    'Welcome! ' +
-      (params ? params.find((v: any) => v.Key === 'name').Value : '')
+    "Welcome! " +
+      (params ? params.find((v: any) => v.Key === "name").Value : "")
   );
   res.end();
 }
@@ -45,7 +45,7 @@ console.log("Listening on 3000..");
 
 MIT
 
-[npm-image]: https://img.shields.io/npm/v/httprouter.svg
-[npm-url]: https://www.npmjs.com/package/httprouter
+[npm-image]: https://img.shields.io/npm/v/httprouter-js.svg
+[npm-url]: https://www.npmjs.com/package/httprouter-js
 [node-image]: https://img.shields.io/badge/node.js-%3E=8-brightgreen.svg
 [node-url]: https://nodejs.org/download/
