@@ -1,0 +1,28 @@
+{
+  "name": "httprouter",
+  "version": "1.0.0",
+  "description": "Super fast web router for node.js",
+  "main": "router.js",
+  "types": "router.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cooperhsiung/httprouter.git"
+  },
+  "keywords": [
+    "web",
+    "router",
+    "http"
+  ],
+  "author": "Cooper Hsiung",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cooperhsiung/httprouter/issues"
+  },
+  "homepage": "https://github.com/cooperhsiung/httprouter#readme",
+  "devDependencies": {
+    "@types/node": "^12.6.2"
+  }
+}
