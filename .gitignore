@@ -10,6 +10,8 @@ lib-cov
 
 # Build
 dist
+*.js
+*.d.ts
 
 # Coverage directory used by tools like istanbul
 coverage
