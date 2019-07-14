@@ -1,6 +1,6 @@
 {
   "name": "httprouter-js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Super fast web router for node.js",
   "main": "router.js",
   "types": "router.d.ts",

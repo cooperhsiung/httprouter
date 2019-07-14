@@ -11,7 +11,7 @@ Super fast web router for node.js, rewritten from golang's [httprouter](https://
 npm i httprouter-js -S
 ```
 
-## Example
+## Usage
 
 ```typescript
 import { createServer, IncomingMessage, ServerResponse } from "http";

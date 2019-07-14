@@ -1,4 +1,4 @@
-import { ServerResponse, IncomingMessage, createServer } from 'http';
+import { ServerResponse, IncomingMessage} from 'http';
 import { parse as parseUrl } from 'url';
 import { Node } from './tree';
 
@@ -78,6 +78,6 @@ export class Router {
       }
     }
 
-    res.end('not found');
+    res.end('Not Found');
   }
 }

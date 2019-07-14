@@ -1,16 +1,16 @@
 import { Handle } from './router';
 
-type nodeType = number;
+type NodeType = number;
 
-const _static: nodeType = 0;
-const root: nodeType = 1;
-const param: nodeType = 2;
-const catchAll: nodeType = 3;
+const STATIC: NodeType = 0;
+const ROOT: NodeType = 1;
+const PARAM: NodeType = 2;
+const CATCHALL: NodeType = 3;
 
 export class Node {
   path: string = '';
   wildChild: boolean = false;
-  nType: nodeType = 0;
+  nType: NodeType = 0;
   maxParams: number = 0;
   indices: string = '';
   children: Node[] = [];
@@ -18,36 +18,8 @@ export class Node {
   priority: number = 0;
 
   constructor(options: any = {}) {
-    if (options.path !== undefined) {
-      this.path = options.path;
-    }
-
-    if (options.wildChild !== undefined) {
-      this.wildChild = options.wildChild;
-    }
-
-    if (options.nType !== undefined) {
-      this.nType = options.nType;
-    }
-
-    if (options.indices !== undefined) {
-      this.indices = options.indices;
-    }
-
-    if (options.children !== undefined) {
-      this.children = options.children;
-    }
-
-    if (options.handle !== undefined) {
-      this.handle = options.handle;
-    }
-
-    if (options.priority !== undefined) {
-      this.priority = options.priority;
-    }
-
-    if (options.maxParams !== undefined) {
-      this.maxParams = options.maxParams;
+    for (let k in options) {
+      (this as any)[k] = options[k];
     }
   }
 
@@ -80,8 +52,6 @@ export class Node {
     let fullPath = path;
     this.priority++;
     let numParams = countParams(path);
-    // console.log("========= numParams",numParams);
-    // console.log(this);
 
     function dispatch(this: Node): any {
       let self = this;
@@ -98,14 +68,11 @@ export class Node {
           i++;
         }
 
-        // console.log('========= i', i);
-        // console.log('========= self.path', self.path);
-
         if (i < self.path.length) {
           let child = new Node({
             path: self.path.slice(i),
             wildChild: self.wildChild,
-            nType: 0,
+            nType: STATIC,
             indices: self.indices,
             children: self.children,
             handle: self.handle,
@@ -125,12 +92,8 @@ export class Node {
           self.wildChild = false;
         }
 
-        // console.log("========= self",self);
-
         if (i < path.length) {
           path = path.slice(i);
-
-          // console.log("========= path11",path);
 
           if (self.wildChild) {
             self = self.children[0];
@@ -148,12 +111,11 @@ export class Node {
               (self.path.length >= path.length ||
                 path[self.path.length] === '/')
             ) {
-              console.log('========= 111', 111);
               return dispatch.call(self);
             } else {
               let pathSeg: string;
 
-              if (self.nType === catchAll) {
+              if (self.nType === CATCHALL) {
                 pathSeg = path;
               } else {
                 pathSeg = splitN(path, '/', 2)[0];
@@ -178,7 +140,7 @@ export class Node {
 
           let c = path[0];
 
-          if (self.nType === param && c === '/' && self.children.length === 1) {
+          if (self.nType === PARAM && c === '/' && self.children.length === 1) {
             self = self.children[0];
             self.priority++;
             return dispatch.call(self);
@@ -193,12 +155,8 @@ export class Node {
             }
           }
 
-          // console.log('========= 2', 2);
-
           if (c !== ':' && c !== '*') {
-            // console.log('========= 2.5', 2.5);
             self.indices += c;
-            // console.log("========= self",self);
             let child = new Node({ maxParams: numParams });
             self.children.push(child);
             self.incrementChildPrio(self.indices.length - 1);
@@ -206,13 +164,7 @@ export class Node {
             self = child;
           }
 
-          // console.log("========= self000",self);
-
-          // console.log("========= self.children",self.children);
-          // console.log("========= self.children",self.children);
-
           self.insertChild(numParams, path, fullPath, handle);
-          // console.log("========= self",self);
 
           return;
         } else if (i === path.length) {
@@ -233,10 +185,8 @@ export class Node {
       dispatch.call(this);
     } else {
       this.insertChild(numParams, path, fullPath, handle);
-      this.nType = root;
+      this.nType = ROOT;
     }
-
-    // console.log("========= this",path,this);
   }
 
   insertChild(
@@ -290,19 +240,14 @@ export class Node {
         );
       }
 
-      // console.log('========= c', c);
-
       if (c === ':') {
         if (i > 0) {
           self.path = path.slice(offset, i);
           offset = i;
         }
 
-        // console.log("========= self.path",self.path);
-        // console.log("========= offset",offset);
-
         let child = new Node({
-          nType: param,
+          nType: PARAM,
           maxParams: numParams
         });
         self.children = [child];
@@ -311,14 +256,9 @@ export class Node {
         self.priority++;
         numParams--;
 
-        // console.log('========= self', self);
-
         if (end < max) {
           self.path = path.slice(offset, end);
           offset = end;
-
-          // console.log("========= self.path",self.path);
-          // console.log("========= offset",offset);
 
           let child = new Node({
             maxParams: numParams,
@@ -328,8 +268,6 @@ export class Node {
           self.children = [child];
           self = child;
         }
-
-        // console.log('========= 11111', 11111);
       } else {
         if (end !== max || numParams > 1) {
           throw new Error(
@@ -357,7 +295,7 @@ export class Node {
 
         let child = new Node({
           wildChild: true,
-          nType: catchAll,
+          nType: CATCHALL,
           maxParams: 1
         });
 
@@ -368,7 +306,7 @@ export class Node {
 
         child = new Node({
           path: path.slice(i),
-          nType: catchAll,
+          nType: CATCHALL,
           maxParams: 1,
           handle: handle,
           priority: 1
@@ -392,8 +330,6 @@ export class Node {
     } as any;
 
     function dispatch(this: Node): any {
-      // console.log('========= this0', this);
-
       let self = this;
 
       while (1) {
@@ -416,7 +352,7 @@ export class Node {
             self = self.children[0];
 
             switch (self.nType) {
-              case param:
+              case PARAM:
                 let end = 0;
                 while (end < path.length && path[end] !== '/') {
                   end++;
@@ -452,7 +388,7 @@ export class Node {
                 }
 
                 return obj;
-              case catchAll:
+              case CATCHALL:
                 if (obj.p === null) {
                   obj.p = Array(self.maxParams).fill({});
                 }
@@ -469,13 +405,12 @@ export class Node {
             }
           }
         } else if (path === self.path) {
-          // console.log('========= self---', self);
           obj.handle = self.handle;
           if (obj.handle !== null) {
             return obj;
           }
 
-          if (path === '/' && self.wildChild && self.nType !== root) {
+          if (path === '/' && self.wildChild && self.nType !== ROOT) {
             obj.tsr = true;
             return obj;
           }
@@ -485,7 +420,7 @@ export class Node {
               self = self.children[i];
               obj.tsr =
                 (self.path.length === 1 && self.handle !== null) ||
-                (self.nType === catchAll && self.children[0].handle !== null);
+                (self.nType === CATCHALL && self.children[0].handle !== null);
               return obj;
             }
           }
